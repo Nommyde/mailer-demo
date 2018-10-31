@@ -1,0 +1,24 @@
+{
+    "autoload": {
+        "psr-4": {
+            "Nommyde\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nommyde\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "symfony/console": "^4.1",
+        "php-amqplib/php-amqplib": "^2.8",
+        "swiftmailer/swiftmailer": "^6.1",
+        "symfony/dependency-injection": "^4.1",
+        "symfony/yaml": "^4.1",
+        "symfony/config": "^4.1",
+        "psr/log": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.4"
+    }
+}

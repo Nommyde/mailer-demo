@@ -1,0 +1,48 @@
+parameters:
+  app.name: Mailing consumer
+  queue.name: emails
+  command.name: consume
+
+  smtp.host: smtp.mail.ru
+  smtp.user: bla@bla.ru
+  smtp.pass: bla123
+  smtp.port: 465
+  smtp.encryption: ssl
+  smtp.timeout: 5
+
+
+
+services:
+  output:
+    class: Symfony\Component\Console\Output\ConsoleOutput
+
+  logger:
+    class: \Symfony\Component\Console\Logger\ConsoleLogger
+    arguments: ['@output']
+
+  swift_transport:
+    class: Swift_SmtpTransport
+    arguments: ['%smtp.host%', '%smtp.port%', '%smtp.encryption%']
+    calls:
+      - [setUsername, ['%smtp.user%']]
+      - [setPassword, ['%smtp.pass%']]
+      - [setTimeout, ['%smtp.timeout%']]
+
+  mailer:
+    class: Nommyde\SwiftMailerAdapter
+    arguments: ['@swift_transport']
+
+  consumer:
+    class: Nommyde\MailingConsumer
+    arguments: ['@mailer', '@logger']
+
+  command:
+    class: Nommyde\MailingCommand
+    arguments: ['@consumer', '%queue.name%', '%command.name%']
+
+  app:
+    class: Symfony\Component\Console\Application
+    arguments: ['%app.name%']
+    calls:
+      - [add, ['@command']]
+      - [setDefaultCommand, ['%command.name%']]
